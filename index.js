@@ -1,30 +1,62 @@
 (() => {
   const toast = (arg) => {
-    const message = typeof arg === 'string' ? arg : arg.message
-    const duration = arg.duration || 3000
-    const toast = document.createElement('div')
+    let timer = null;
+    let clearStatus = false;
+    const message = typeof arg === 'string' ? arg : arg.message;
+    const duration = arg.duration || 4000;
+    const transition = arg.transition ?? true;
+    const toast = document.createElement('div');
     toast.style.cssText = `
       position: fixed;
-      top: 10px;
+      bottom: 50px;
       left: 50%;
       box-sizing: border-box;
       transform: translateX(-50%);
-      padding: 14px 16px;
-      background-color: rgba(50, 47, 53, 1);
+      width: 90%;
+      padding: 10px 16px;
+      background-color: rgba(0, 0, 0, .6);
       color: #fff;
-      border-radius: 4px;
+      border-radius: 8px;
       z-index: 999999;
-      transition: top .5s;
-    `
-    toast.innerText = message
-    document.body.appendChild(toast)
-    setTimeout(() => {
-      toast.style.top = '-100px'
+      display: flex;
+      align-items: center;
+      column-gap: 16px;
+      opacity: 0;
+      word-break: break-all;
+    `;
+    toast.classList.add('authme-toast');
+
+    const clear = () => {
+      if (!clearStatus) {
+        clearStatus = true;
+        document.body.removeChild(toast);
+        clearTimeout(timer);
+      }
+    };
+
+    if (transition) {
+      toast.style.transition = 'opacity .3s ease-in';
       setTimeout(() => {
-        document.body.removeChild(toast)
-      }, 500)
-    }, duration)
-  }
+        toast.style.opacity = '1';
+      }, 300);
+    } else {
+      toast.style.opacity = '1';
+    }
+    toast.innerHTML = message;
+    document.body.appendChild(toast);
+    timer = setTimeout(() => {
+      clearStatus = true;
+      toast.style.opacity = '0';
+      toast.style.transition = 'opacity .3s ease-out';
+      setTimeout(() => {
+        document.body.removeChild(toast);
+      }, 500);
+    }, duration);
+
+    return {
+      clear,
+    };
+  };
 
   window.toast = toast
 })()

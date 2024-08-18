@@ -16,5 +16,33 @@
       duration: 2000,
     })
   }, 3000);
+
+
+
+
+let tt = toast({
+  message: 'hihihihi',
+  duration: 1000,
+  transition: true
+})
+
+setTimeout(() => {
+  console.log(4000);
+  tt.clear();
+}, 4000)
+
+setTimeout(() => {
+  console.log(5000);
+  tt = toast({
+    message: '5555555555',
+    duration: 5000,
+    transition: true
+  })
+}, 5000)
+
+setTimeout(() => {
+  console.log(7000);
+  tt.clear();
+}, 7000)
 </script>
 </html>
